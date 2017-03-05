@@ -1,16 +1,25 @@
+[user]
+  name = Matthias Neugebauer
+  signingkey = 67C8D8CC
+  useConfigOnly = true
+
 [core]
   eol = lf
-  # Use custom `.gitignore` and `.gitattributes`
+
   excludesfile = ~/.gitignore
   attributesfile = ~/.gitattributes
-  #
-  editor = vim
+
+  editor = nvim
   pager = less
+
   # Treat spaces before tabs, and all kinds of trailing whitespace as an error
   whitespace = space-before-tab,tab-in-indent,trailing-space
+
   # Make `git rebase` safer on OS X
   # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
   trustctime = false
+
+### CMDs ###
 
 [alias]
   # View the current working tree status using the short format
@@ -42,19 +51,49 @@
   # Log in tree view
   lt = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all --
 
-  change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ $`echo $VAR` = \\\"$OLD\\\" ]]; then export $VAR=\\\"$NEW\\\"; fi\" $@; }; f "
-
 [apply]
   # Detect whitespace errors when applying a patch
   whitespace = fix
 
-# Use `origin` as the default remote on the `master` branch in all cases
 [branch "master"]
+  # Use `origin` as the default remote on the `master` branch in all cases
   remote = origin
   merge = refs/heads/master
 
+[diff]
+  tool = Kaleidoscope
+
+[difftool]
+  prompt = false
+
+[difftool "Kaleidoscope"]
+  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+
+[fetch]
+  prune = true
+
+[push]
+  default = current
+
+[merge]
+  # Include summaries of merged commits in newly created merge commit messages
+  log = true
+  tool = Kaleidoscope
+
+[mergetool]
+  prompt = false
+
+[mergetool "Kaleidoscope"]
+  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+  trustexitcode = true
+
+### misc ###
+
+[pager]
+  diff = diff-so-fancy | less --tabs=1,5 -RFX
+  show = diff-so-fancy | less --tabs=1,5 -RFX
+
 [color]
-  # Use colors in Git commands that are capable of colored output when outputting to the terminal
   ui = always
 [color "branch"]
   current = yellow reverse
@@ -69,45 +108,6 @@
   added = yellow
   changed = green
   untracked = cyan
-[merge]
-  # Include summaries of merged commits in newly created merge commit messages
-  log = true
-  tool = Kaleidoscope
 
 [credential]
   helper = osxkeychain
-
-[push]
-  default = current
-
-[user]
-  name = Matthias Neugebauer
-  email = mtneug@mailbox.org
-  signingkey = 67C8D8CC
-  useConfigOnly = true
-
-[difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path =
-[mergetool "sourcetree"]
-  cmd = /opt/homebrew-cask/Caskroom/sourcetree/2.1/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
-
-[mergetool "Kaleidoscope"]
-  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-  trustexitcode = true
-[difftool "Kaleidoscope"]
-  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-
-[difftool]
-  prompt = false
-[mergetool]
-  prompt = false
-[diff]
-  tool = Kaleidoscope
-
-[pager]
-  diff = diff-so-fancy | less --tabs=1,5 -RFX
-  show = diff-so-fancy | less --tabs=1,5 -RFX
-[fetch]
-	prune = true
